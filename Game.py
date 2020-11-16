@@ -25,6 +25,7 @@ text_title = font.render("Campo Minado", True, p_green)
 fundo = pygame.image.load("Imagens/fundo/floresta_desfocada.jpg")
 default = pygame.image.load("Imagens/tabuleiro/default.png")
 mine = pygame.image.load("Imagens/tabuleiro/mine.png")
+img_bandeira = pygame.image.load("Imagens/fundo/bandeira-1.png")
 empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
@@ -64,7 +65,7 @@ def Abrir_casa(pos, list_bomb, tam_casa, tam_tab):
     if pos in list_bomb:
         screen.blit(bomb_img, posicao_casa)
     else:
-        print(quant_bomba)
+        """print(quant_bomba)
         if quant_bomba == 0:
             for c in redor: #Não Saí do primeiro item
                 if not c < (0, 0) or c > (tam_tab, tam_tab):
@@ -72,7 +73,7 @@ def Abrir_casa(pos, list_bomb, tam_casa, tam_tab):
                     print(c)
                     print(list_bomb)
                     print(tam_casa)
-                    Abrir_casa(c, list_bomb, tam_casa, tam_tab)
+                    Abrir_casa(c, list_bomb, tam_casa, tam_tab)"""
         screen.blit(empty[quant_bomba], posicao_casa)
 
 
@@ -95,6 +96,9 @@ def Game(tam):
         empty[c] = pygame.transform.scale(empty[c], (tam_casa, tam_casa))
         padrao = pygame.transform.scale(default, (tam_casa, tam_casa))
         bomb_img = pygame.transform.scale(mine, (tam_casa, tam_casa))
+
+    # Mostrar local de numero de bombas definidas
+    screen.blit(img_bandeira, (280, 453))
 
     # Criar tabela
     pos_casa = (25, 50)
