@@ -3,7 +3,7 @@ import pygame
 from time import sleep
 
 # Definição de tela
-screen = pygame.display.set_mode((450, 500))
+screen = pygame.display.set_mode((450, 510))
 
 # Definir cores
 black = (0, 0, 0)
@@ -26,10 +26,14 @@ fundo = pygame.image.load("Imagens/fundo/floresta_desfocada.jpg")
 default = pygame.image.load("Imagens/tabuleiro/default.png")
 mine = pygame.image.load("Imagens/tabuleiro/mine.png")
 img_bandeira = pygame.image.load("Imagens/fundo/bandeira-1.png")
+tab_bandeira = pygame.image.load("Imagens/tabuleiro/bandeira.png")
+voltar_icone = pygame.image.load("Imagens/fundo/icone-voltar.png ")
 empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
 
+# Mostrar local de numero de bombas
+screen.blit(img_bandeira, (280, 453))
 
 # Funções
 def CriarBomba(tam):
@@ -44,7 +48,8 @@ def CriarBomba(tam):
     return bomb
 
 
-def Abrir_casa(pos, list_bomb, tam_casa, tam_tab):
+def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
+
     redor = ((pos[0]-1, pos[1]-1),
              (pos[0]-1, pos[1]),
              (pos[0]-1, pos[1]+1),
@@ -80,11 +85,10 @@ def Abrir_casa(pos, list_bomb, tam_casa, tam_tab):
 def Game(tam):
     sleep(1/60)
     # Inciar pygame
-    global padrao
-    global bomb_img
+    global padrao, bandeira_casa, bomb_img
     pygame.init()
 
-    # Apgar a tela anterior
+    # Apagar a tela anterior
     screen.blit(fundo, (0, 0))
 
     # mostrar texto
@@ -96,9 +100,12 @@ def Game(tam):
         empty[c] = pygame.transform.scale(empty[c], (tam_casa, tam_casa))
         padrao = pygame.transform.scale(default, (tam_casa, tam_casa))
         bomb_img = pygame.transform.scale(mine, (tam_casa, tam_casa))
+        bandeira_casa = pygame.transform.scale(tab_bandeira, (tam_casa, tam_casa))
 
     # Mostrar local de numero de bombas definidas
     screen.blit(img_bandeira, (280, 453))
+
+    screen.blit(voltar_icone, (50, 453))
 
     # Criar tabela
     pos_casa = (25, 50)
@@ -111,8 +118,10 @@ def Game(tam):
         pos_casa = (25, pos_casa[1] + tam_casa)
     pygame.display.update()
 
-    # Criar Bombas
-    casas_bombas = CriarBomba(tam)
+    # Variáveis
+    casas_bombas = CriarBomba(tam)  # Criar Bombas
+    bombas_definidas = []           # Casas das bombas marcadas pelo jogador
+    casas_abertas = []              # Guarda as casas que já foram abertas
 
     # Loop do jogo
     sair = True
@@ -121,20 +130,39 @@ def Game(tam):
         sleep(1/60)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sair = False
-
         # Clique do mouse
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Posição do mouse
                 pos_mouse = pygame.mouse.get_pos()
-                pos_mouse = int((pos_mouse[0] - 25) / tam_casa), int((pos_mouse[1] - 50) / tam_casa)
+                casa_mouse = int((pos_mouse[0] - 25) / tam_casa), int((pos_mouse[1] - 50) / tam_casa)
 
-                Abrir_casa(pos_mouse, casas_bombas, tam_casa, tam)
+                if casa_mouse not in casas_abertas:
+                    posicao_casa = ((casa_mouse[0] * tam_casa) + 25), int((casa_mouse[1] * tam_casa) + 50)
+
+                    # Botão Esquerdo
+                    if pygame.mouse.get_pressed()[0] == 1:
+                        if casa_mouse not in bombas_definidas:
+                            Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
+                            casas_abertas.append(casa_mouse)
+
+                        if (90, 495) > pos_mouse > (50, 453):
+                            break
+
+                    # Botão Direito
+                    elif pygame.mouse.get_pressed()[2] == 1:
+                        if casa_mouse in bombas_definidas:
+                            bombas_definidas.pop(bombas_definidas.index(casa_mouse))
+                            screen.blit(padrao, posicao_casa)
+                        else:
+                            bombas_definidas.append(casa_mouse)
+                            screen.blit(bandeira_casa, posicao_casa)
+
+                        font = pygame.font.SysFont('impact', 30)
+                        screen.blit(img_bandeira, (280, 453))
+                        txt_num_bombas_abertas = font.render(f"{len(bombas_definidas)}", True, black)
+                        screen.blit(txt_num_bombas_abertas, (335, 457))
+
                 pygame.display.update()
-
-
-
 
     pygame.display.update()
     sleep(1)
