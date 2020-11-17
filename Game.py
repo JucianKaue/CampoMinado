@@ -47,6 +47,7 @@ def criarBomba(tam):
         if casa not in bomb:
             bomb.append(casa)
             count += 1
+    print(bomb)
     return bomb
 
 
@@ -81,10 +82,17 @@ def abrir_casa(pos, list_bomb, tam_casa):
 
 def ganhar(casas_abertas, tamanho_tabuleiro, casas_marcadas, casas_bombas):
     bombas_marcadas_certas = 0
-    if len(casas_abertas) == tamanho_tabuleiro**tamanho_tabuleiro:
+    print(f'casas abertas: {len(casas_abertas)}')
+    print(f'casas bombas: {len(casas_bombas)}')
+    print(f'tam-casas: {tamanho_tabuleiro*tamanho_tabuleiro}')
+    print(len(casas_abertas) == (tamanho_tabuleiro*tamanho_tabuleiro)-len(casas_bombas))
+    if len(casas_abertas) == (tamanho_tabuleiro*tamanho_tabuleiro)-len(casas_bombas):
+        print('im here')
         for casa in casas_marcadas:
+            print(casa)
             if casas_bombas.count(casa) == 1:
                 bombas_marcadas_certas += 1
+                print(f'Bombas Marcadas: {bombas_marcadas_certas}')
 
     if bombas_marcadas_certas == int((tamanho_tabuleiro*tamanho_tabuleiro)*0.20):
         return True
@@ -182,8 +190,22 @@ def Game(tam):
                             screen.blit(txt_num_bombas_abertas, (335, 457))
         if find_bomb:
             break
-        """if ganhar(casas_abertas, tam, bombas_definidas, casas_bombas):
-            print('você ganhou')"""
+        if ganhar(casas_abertas, tam, bombas_definidas, casas_bombas):
 
+            nivel = 'pessoa'
+            if tam == 8: nivel = 'Soldado'
+            if tam == 12: nivel = 'sargento'
+            if tam == 16: nivel = 'Tenente'
+            if tam == 20: nivel = 'capitão'
+
+            font = pygame.font.SysFont('impact', 45)
+            txt_win = font.render(f"Parábens {nivel}", True, black)
+            img_win = pygame.image.load("Imagens/win-rd.jpg")
+            screen.blit(fundo, (0, 0))
+            screen.blit(img_win, (25, 10))
+            screen.blit(txt_win, (40, 30))
+            pygame.display.update()
+            sleep(5)
+            break
         pygame.display.update()
 
