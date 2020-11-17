@@ -38,7 +38,7 @@ screen.blit(img_bandeira, (280, 453))
 
 # Funções
 def CriarBomba(tam):
-    quant_bomb = int((tam*tam)*0.25)
+    quant_bomb = int((tam*tam)*0.20)
     bomb = []
     count = 0
     while count < quant_bomb:
@@ -50,37 +50,38 @@ def CriarBomba(tam):
 
 
 def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
+        redor = ((pos[0]-1, pos[1]-1),
+                 (pos[0]-1, pos[1]),
+                 (pos[0]-1, pos[1]+1),
+                 (pos[0],   pos[1]-1),
+                 (pos[0],   pos[1]),
+                 (pos[0],   pos[1]+1),
+                 (pos[0]+1, pos[1]-1),
+                 (pos[0]+1, pos[1]),
+                 (pos[0]+1, pos[1]+1))
 
-    redor = ((pos[0]-1, pos[1]-1),
-             (pos[0]-1, pos[1]),
-             (pos[0]-1, pos[1]+1),
-             (pos[0],   pos[1]-1),
-             (pos[0],   pos[1]),
-             (pos[0],   pos[1]+1),
-             (pos[0]+1, pos[1]-1),
-             (pos[0]+1, pos[1]),
-             (pos[0]+1, pos[1]+1))
+        quant_bomba = 0             # Essa variavel não muda
+        for bomb in list_bomb:
+            for casa in redor:
+                if casa == bomb:
+                    quant_bomba += 1
 
-    quant_bomba = 0             # Essa variavel não muda
-    for bomb in list_bomb:
-        for casa in redor:
-            if casa == bomb:
-                quant_bomba += 1
+        posicao_casa = ((pos[0] * tam_casa) + 25), int((pos[1] * tam_casa) + 50)
+        if pos in list_bomb:
+            screen.blit(bomb_img, posicao_casa)
+        else:
+            screen.blit(empty[quant_bomba], posicao_casa)
 
-    posicao_casa = ((pos[0] * tam_casa) + 25), int((pos[1] * tam_casa) + 50)
-    if pos in list_bomb:
-        screen.blit(bomb_img, posicao_casa)
-    else:
-        """print(quant_bomba)
-        if quant_bomba == 0:
-            for c in redor: #Não Saí do primeiro item
-                if not c < (0, 0) or c > (tam_tab, tam_tab):
-                    print("I'm here")
-                    print(c)
-                    print(list_bomb)
-                    print(tam_casa)
-                    Abrir_casa(c, list_bomb, tam_casa, tam_tab)"""
-        screen.blit(empty[quant_bomba], posicao_casa)
+
+def ganhar(casas_abertas, tamanho_tabuleiro, casas_marcadas, casas_bombas):
+    bombas_marcadas_certas = 0
+    if len(casas_abertas) == tamanho_tabuleiro**tamanho_tabuleiro:
+        for casa in casas_marcadas:
+            if casas_bombas.count(casa) == 1:
+                bombas_marcadas_certas += 1
+
+    if bombas_marcadas_certas == int((tamanho_tabuleiro*tamanho_tabuleiro)*0.20):
+        return True
 
 
 def Game(tam):
@@ -128,29 +129,28 @@ def Game(tam):
     # Loop do jogo
     sair = True
     while sair:
-        # Travar FPS
-        #sleep(1/60)
-
+        sleep(1/60)     # Travar FPS
         for event in pygame.event.get():
-        # Clique do mouse
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # Posição do mouse
-                pos_mouse = pygame.mouse.get_pos()
-                casa_mouse = int((pos_mouse[0] - 25) / tam_casa), int((pos_mouse[1] - 50) / tam_casa)
+            # Clique do mouse
+            if event.type == pygame.MOUSEBUTTONDOWN:                                                        # Se clicar com o mouse
+                pos_mouse = pygame.mouse.get_pos()                                                          # Pega a posição do mause em pixels
+                casa_mouse = int((pos_mouse[0] - 25) / tam_casa), int((pos_mouse[1] - 50) / tam_casa)       # Converte a posição do mause para a posição das casas
 
-                if casa_mouse not in casas_abertas:
-                    posicao_casa = ((casa_mouse[0] * tam_casa) + 25), int((casa_mouse[1] * tam_casa) + 50)
-
-                    # Botão Esquerdo
+                if casa_mouse not in casas_abertas:                                                         # Confere se as casas já foram abertas ou não
+                    posicao_casa = ((casa_mouse[0] * tam_casa) + 25), int((casa_mouse[1] * tam_casa) + 50)  # Converte a casa que o mause está de volta para pixels
+                    # Se o botão esquerdo do mause for clicado
                     if pygame.mouse.get_pressed()[0] == 1:
-                        if casa_mouse[0] < tam and casa_mouse[1] < tam:
+                        if casa_mouse[0] < tam and casa_mouse[1] < tam:   # Confere a posição que houve o clique do mouse foi dentro do tabuleiro
                             if casa_mouse not in bombas_definidas:
+                                print('oi')
                                 Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
                                 casas_abertas.append(casa_mouse)
 
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495:
                             screen.blit(voltar_icone_clicked, (50, 453))
+                            pygame.display.update()
                             sair = False
+                            sleep(0.2)
 
                     # Botão Direito
                     elif pygame.mouse.get_pressed()[2] == 1:
@@ -167,7 +167,8 @@ def Game(tam):
                             txt_num_bombas_abertas = font.render(f"{len(bombas_definidas)}", True, black)
                             screen.blit(txt_num_bombas_abertas, (335, 457))
 
-                pygame.display.update()
+        """if ganhar(casas_abertas, tam, bombas_definidas, casas_bombas):
+            print('você ganhou')"""
 
-    pygame.display.update()
-    sleep(1)
+        pygame.display.update()
+
