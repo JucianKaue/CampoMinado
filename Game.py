@@ -36,8 +36,9 @@ for i in range(0, 9):
 # Mostrar local de numero de bombas
 screen.blit(img_bandeira, (280, 453))
 
+
 # Funções
-def CriarBomba(tam):
+def criarBomba(tam):
     quant_bomb = int((tam*tam)*0.20)
     bomb = []
     count = 0
@@ -49,7 +50,7 @@ def CriarBomba(tam):
     return bomb
 
 
-def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
+def abrir_casa(pos, list_bomb, tam_casa):
         redor = ((pos[0]-1, pos[1]-1),
                  (pos[0]-1, pos[1]),
                  (pos[0]-1, pos[1]+1),
@@ -69,8 +70,13 @@ def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
         posicao_casa = ((pos[0] * tam_casa) + 25), int((pos[1] * tam_casa) + 50)
         if pos in list_bomb:
             screen.blit(bomb_img, posicao_casa)
+            pygame.display.update()
+            sleep(0.3)
+            perder()
+            return True
         else:
             screen.blit(empty[quant_bomba], posicao_casa)
+        return False
 
 
 def ganhar(casas_abertas, tamanho_tabuleiro, casas_marcadas, casas_bombas):
@@ -82,6 +88,14 @@ def ganhar(casas_abertas, tamanho_tabuleiro, casas_marcadas, casas_bombas):
 
     if bombas_marcadas_certas == int((tamanho_tabuleiro*tamanho_tabuleiro)*0.20):
         return True
+
+
+def perder():
+    img_lost = pygame.image.load("Imagens/lost-rd.jpg")
+    screen.blit(fundo, (0, 0))
+    screen.blit(img_lost, (25, 110))
+    pygame.display.update()
+    sleep(2)
 
 
 def Game(tam):
@@ -122,9 +136,10 @@ def Game(tam):
     pygame.display.update()
 
     # Variáveis
-    casas_bombas = CriarBomba(tam)  # Criar Bombas
+    casas_bombas = criarBomba(tam)  # Criar Bombas
     bombas_definidas = []           # Casas das bombas marcadas pelo jogador
     casas_abertas = []              # Guarda as casas que já foram abertas
+    find_bomb = False
 
     # Loop do jogo
     sair = True
@@ -142,8 +157,7 @@ def Game(tam):
                     if pygame.mouse.get_pressed()[0] == 1:
                         if casa_mouse[0] < tam and casa_mouse[1] < tam:   # Confere a posição que houve o clique do mouse foi dentro do tabuleiro
                             if casa_mouse not in bombas_definidas:
-                                print('oi')
-                                Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
+                                find_bomb = abrir_casa(casa_mouse, casas_bombas, tam_casa)
                                 casas_abertas.append(casa_mouse)
 
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495:
@@ -166,7 +180,8 @@ def Game(tam):
                             screen.blit(img_bandeira, (280, 453))
                             txt_num_bombas_abertas = font.render(f"{len(bombas_definidas)}", True, black)
                             screen.blit(txt_num_bombas_abertas, (335, 457))
-
+        if find_bomb:
+            break
         """if ganhar(casas_abertas, tam, bombas_definidas, casas_bombas):
             print('você ganhou')"""
 
