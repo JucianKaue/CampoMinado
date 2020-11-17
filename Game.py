@@ -49,8 +49,10 @@ def CriarBomba(tam):
     return bomb
 
 
-def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
-
+def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas):
+    if (pos[0] < 0 or pos[1] < 0) or (pos[0] > tamanho_tabuleiro or pos[1] > tamanho_tabuleiro):
+        return
+    print(f"Posição: {pos}")
     redor = ((pos[0]-1, pos[1]-1),
              (pos[0]-1, pos[1]),
              (pos[0]-1, pos[1]+1),
@@ -71,20 +73,25 @@ def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro):
     if pos in list_bomb:
         screen.blit(bomb_img, posicao_casa)
     else:
+        screen.blit(empty[quant_bomba], posicao_casa)
+        for vizinha in redor:
+            casas_abertas.append(pos)
+            Abrir_casa(vizinha, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas)
+
         """print(quant_bomba)
         if quant_bomba == 0:
-            for c in redor: #Não Saí do primeiro item
-                if not c < (0, 0) or c > (tam_tab, tam_tab):
-                    print("I'm here")
-                    print(c)
-                    print(list_bomb)
-                    print(tam_casa)
-                    Abrir_casa(c, list_bomb, tam_casa, tam_tab)"""
-        screen.blit(empty[quant_bomba], posicao_casa)
+            for c in redor: # Não Saí do primeiro item
+                print(f'casa redor: {c}')
+                print("I'm here")
+                print(list_bomb)
+                print(tam_casa)"""
+
 
 
 def Game(tam):
+    # Travar FPS
     sleep(1/60)
+
     # Inciar pygame
     global padrao, bandeira_casa, bomb_img
     pygame.init()
@@ -145,8 +152,8 @@ def Game(tam):
                     if pygame.mouse.get_pressed()[0] == 1:
                         if casa_mouse[0] < tam and casa_mouse[1] < tam:
                             if casa_mouse not in bombas_definidas:
-                                Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
-                                casas_abertas.append(casa_mouse)
+                                Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam, casas_abertas)
+
 
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495:
                             screen.blit(voltar_icone_clicked, (50, 453))
