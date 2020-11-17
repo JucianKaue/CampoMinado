@@ -64,15 +64,23 @@ while run:
         pos = pygame.mouse.get_pos()
         if 45 <= pos[0] <= 213 and 50 <= pos[1] <= 243:
             screen.blit(soldier1_click, (45, 50))
+            pygame.display.update()
+            sleep(0.2)
             Game(8)
         if 237 <= pos[0] <= 405 and 50 <= pos[1] <= 243:
             screen.blit(soldier2_click, (237, 50))
+            pygame.display.update()
+            sleep(0.2)
             Game(12)
         if 45 <= pos[0] <= 213 and 250 <= pos[1] <= 443:
             screen.blit(soldier3_click, (45, 250))
+            pygame.display.update()
+            sleep(0.2)
             Game(16)
         if 237 <= pos[0] <= 405 and 250 <= pos[1] <= 443:
             screen.blit(soldier4_click, (237, 250))
+            pygame.display.update()
+            sleep(0.2)
             Game(20)
 
     pygame.display.update()

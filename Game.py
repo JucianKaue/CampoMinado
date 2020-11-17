@@ -28,6 +28,7 @@ mine = pygame.image.load("Imagens/tabuleiro/mine.png")
 img_bandeira = pygame.image.load("Imagens/fundo/bandeira-1.png")
 tab_bandeira = pygame.image.load("Imagens/tabuleiro/bandeira.png")
 voltar_icone = pygame.image.load("Imagens/fundo/icone-voltar.png ")
+voltar_icone_clicked = pygame.image.load("Imagens/fundo/icone-voltar-clicked.png")
 empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
@@ -105,6 +106,7 @@ def Game(tam):
     # Mostrar local de numero de bombas definidas
     screen.blit(img_bandeira, (280, 453))
 
+    # Mostrar botão de voltar
     screen.blit(voltar_icone, (50, 453))
 
     # Criar tabela
@@ -127,7 +129,7 @@ def Game(tam):
     sair = True
     while sair:
         # Travar FPS
-        sleep(1/60)
+        #sleep(1/60)
 
         for event in pygame.event.get():
         # Clique do mouse
@@ -141,26 +143,29 @@ def Game(tam):
 
                     # Botão Esquerdo
                     if pygame.mouse.get_pressed()[0] == 1:
-                        if casa_mouse not in bombas_definidas:
-                            Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
-                            casas_abertas.append(casa_mouse)
+                        if casa_mouse[0] < tam and casa_mouse[1] < tam:
+                            if casa_mouse not in bombas_definidas:
+                                Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam)
+                                casas_abertas.append(casa_mouse)
 
-                        if (90, 495) > pos_mouse > (50, 453):
-                            break
+                        if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495:
+                            screen.blit(voltar_icone_clicked, (50, 453))
+                            sair = False
 
                     # Botão Direito
                     elif pygame.mouse.get_pressed()[2] == 1:
-                        if casa_mouse in bombas_definidas:
-                            bombas_definidas.pop(bombas_definidas.index(casa_mouse))
-                            screen.blit(padrao, posicao_casa)
-                        else:
-                            bombas_definidas.append(casa_mouse)
-                            screen.blit(bandeira_casa, posicao_casa)
+                        if casa_mouse[0] < tam and casa_mouse[1] < tam:
+                            if casa_mouse in bombas_definidas:
+                                bombas_definidas.pop(bombas_definidas.index(casa_mouse))
+                                screen.blit(padrao, posicao_casa)
+                            else:
+                                bombas_definidas.append(casa_mouse)
+                                screen.blit(bandeira_casa, posicao_casa)
 
-                        font = pygame.font.SysFont('impact', 30)
-                        screen.blit(img_bandeira, (280, 453))
-                        txt_num_bombas_abertas = font.render(f"{len(bombas_definidas)}", True, black)
-                        screen.blit(txt_num_bombas_abertas, (335, 457))
+                            font = pygame.font.SysFont('impact', 30)
+                            screen.blit(img_bandeira, (280, 453))
+                            txt_num_bombas_abertas = font.render(f"{len(bombas_definidas)}", True, black)
+                            screen.blit(txt_num_bombas_abertas, (335, 457))
 
                 pygame.display.update()
 
