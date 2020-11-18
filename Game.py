@@ -78,7 +78,7 @@ def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas):
     print(f"Posição: {pos}")
     redor = get_vizinhas(pos[0], pos[1], tamanho_tabuleiro)
 
-    quant_bomba = 0             # Essa variavel não muda
+    quant_bomba = 0            # Essa variavel não muda
     for bomb in list_bomb:
         for casa in redor:
             if casa == bomb:
