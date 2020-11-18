@@ -22,9 +22,8 @@ img_bandeira = pygame.image.load("Imagens/fundo/bandeira-1.png")
 tab_bandeira = pygame.image.load("Imagens/tabuleiro/bandeira.png")
 voltar_icone = pygame.image.load("Imagens/fundo/icone-voltar.png ")
 voltar_icone_clicked = pygame.image.load("Imagens/fundo/icone-voltar-clicked.png")
-empty = []
-
 """Explicar essa parte"""
+empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
 
@@ -114,7 +113,7 @@ def game(tam):          # Função principal do jogo
 
     screen.blit(img_bandeira, (280, 453))   # Mostrar local de numero de bombas definidas
 
-    screen.blit(voltar_icone, (50, 453)) # Mostrar botão de voltar
+    screen.blit(voltar_icone, (50, 453))    # Mostrar botão de voltar
 
     # Criar tabela
     pos_casa = (25, 50)     # posição da primeira casa da tabela
@@ -173,7 +172,7 @@ def game(tam):          # Função principal do jogo
                             # Atualizar o contador de bombas
                             fonte = pygame.font.SysFont('impact', 30)       # Definir fonte
                             screen.blit(img_bandeira, (280, 453))           # Mostrar a imagem da bandeira
-                            txt_num_bombas_abertas = fonte.render(len(bombas_definidas), True, black)   # Gerar a quantidade de bombas marcadas
+                            txt_num_bombas_abertas = fonte.render(f"{len(bombas_definidas)}", True, black)   # Gerar a quantidade de bombas marcadas
                             screen.blit(txt_num_bombas_abertas, (335, 457))     # Mostrar na tela o numero de bombas
 
         if find_bomb:   # Se o usuario tiver clicado em uma bomba
