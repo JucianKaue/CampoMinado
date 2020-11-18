@@ -48,20 +48,35 @@ def CriarBomba(tam):
             count += 1
     return bomb
 
+def get_vizinhas(x, y, tam):
+    return list(filter(lambda pos: 0 <= pos[0] <= tam and 0 <= pos[1] <= tam,
+                       [(x - 1, y - 1), (x - 1, y), (x - 1, y + 1), (x, y - 1),
+                        (x, y + 1), (x + 1, y - 1), (x + 1, y), (x + 1, y + 1)]))
+
+
+vazias = list()
+def get_vizinhas_vazias(casa, tam, lista_bombas):
+    global vazias
+    if casa not in lista_bombas:
+        vazias.append(casa)
+        vizinhas = get_vizinhas(casa[0], casa[1], tam)
+        for vizinha in vizinhas:
+            if vizinha not in vazias:
+                vazias.extend(get_vizinhas_vazias(vizinha, tam, lista_bombas))
+
+        """if num_casas == len(casa):
+            return casa
+        else:
+            return casa + get_vizinhas_vazias(casa, tam, lista_bombas)"""
+    return vazias
+
 
 def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas):
     if (pos[0] < 0 or pos[1] < 0) or (pos[0] > tamanho_tabuleiro or pos[1] > tamanho_tabuleiro):
         return
+
     print(f"Posição: {pos}")
-    redor = ((pos[0]-1, pos[1]-1),
-             (pos[0]-1, pos[1]),
-             (pos[0]-1, pos[1]+1),
-             (pos[0],   pos[1]-1),
-             (pos[0],   pos[1]),
-             (pos[0],   pos[1]+1),
-             (pos[0]+1, pos[1]-1),
-             (pos[0]+1, pos[1]),
-             (pos[0]+1, pos[1]+1))
+    redor = get_vizinhas(pos[0], pos[1], tamanho_tabuleiro)
 
     quant_bomba = 0             # Essa variavel não muda
     for bomb in list_bomb:
@@ -73,11 +88,17 @@ def Abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas):
     if pos in list_bomb:
         screen.blit(bomb_img, posicao_casa)
     else:
-        screen.blit(empty[quant_bomba], posicao_casa)
-        for vizinha in redor:
+        # screen.blit(empty[0], posicao_casa)
+        vazias = get_vizinhas_vazias(pos, tamanho_tabuleiro, list_bomb)
+        print(f'vazias: {vazias}')
+        print(casas_abertas)
+        for vazia in vazias:
+            screen.blit(empty[quant_bomba], posicao_casa)
+        """for vizinha in redor:
             casas_abertas.append(pos)
-            Abrir_casa(vizinha, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas)
-
+            
+            #Abrir_casa(vizinha, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas)
+"""
         """print(quant_bomba)
         if quant_bomba == 0:
             for c in redor: # Não Saí do primeiro item
@@ -153,7 +174,6 @@ def Game(tam):
                         if casa_mouse[0] < tam and casa_mouse[1] < tam:
                             if casa_mouse not in bombas_definidas:
                                 Abrir_casa(casa_mouse, casas_bombas, tam_casa, tam, casas_abertas)
-
 
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495:
                             screen.blit(voltar_icone_clicked, (50, 453))
