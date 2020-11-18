@@ -1,5 +1,5 @@
 import pygame
-from Game import Game
+from Game import game
 from time import sleep
 
 # Definir cores
@@ -29,8 +29,8 @@ soldier4_click = pygame.image.load("Imagens/soldiers/sol4_click.png")
 # Frases
 pygame.font.init()
 font = pygame.font.SysFont("impact", 35)
-text_title_menu1 = font.render("Campo Minado", True, (p_green))
-text_title_menu2 = font.render("Escolha um nível", True, (black))
+text_title_menu1 = font.render("Campo Minado", True, p_green)
+text_title_menu2 = font.render("Escolha um nível", True, black)
 
 # Iniciar Pygame
 try:
@@ -66,21 +66,21 @@ while run:
             screen.blit(soldier1_click, (45, 50))
             pygame.display.update()
             sleep(0.2)
-            Game(8)
+            game(8)
         if 237 <= pos[0] <= 405 and 50 <= pos[1] <= 243:
             screen.blit(soldier2_click, (237, 50))
             pygame.display.update()
             sleep(0.2)
-            Game(12)
+            game(12)
         if 45 <= pos[0] <= 213 and 250 <= pos[1] <= 443:
             screen.blit(soldier3_click, (45, 250))
             pygame.display.update()
             sleep(0.2)
-            Game(16)
+            game(16)
         if 237 <= pos[0] <= 405 and 250 <= pos[1] <= 443:
             screen.blit(soldier4_click, (237, 250))
             pygame.display.update()
             sleep(0.2)
-            Game(20)
+            game(20)
 
     pygame.display.update()
