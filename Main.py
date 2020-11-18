@@ -66,21 +66,21 @@ while run:
             screen.blit(soldier1_click, (45, 50))
             pygame.display.update()
             sleep(0.2)
-            game(8)
+            run = game(8)
         if 237 <= pos[0] <= 405 and 50 <= pos[1] <= 243:
             screen.blit(soldier2_click, (237, 50))
             pygame.display.update()
             sleep(0.2)
-            game(12)
+            run = game(12)
         if 45 <= pos[0] <= 213 and 250 <= pos[1] <= 443:
             screen.blit(soldier3_click, (45, 250))
             pygame.display.update()
             sleep(0.2)
-            game(16)
+            run = game(16)
         if 237 <= pos[0] <= 405 and 250 <= pos[1] <= 443:
             screen.blit(soldier4_click, (237, 250))
             pygame.display.update()
             sleep(0.2)
-            game(20)
+            run = game(20)
 
     pygame.display.update()

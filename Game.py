@@ -102,6 +102,7 @@ def perder():   # Irá mostrar na tela a mensagem de que o jogador perrdeu
 
 
 def game(tam):          # Função principal do jogo
+
     sleep(1/60)     # Trava o jogo em 60 atualizações por minuto (60 FPS)
 
     global padrao, bandeira_casa, bomb_img  # Define algumas variáveis que possuem escopo global, ou seja, funcionam em qualquer parte do programa
@@ -147,6 +148,9 @@ def game(tam):          # Função principal do jogo
         sleep(1/60)     # Travar FPS
 
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:   # Se o usuário clicar no "X"
+                return False                # Fechará o programa
+
             # Clique do mouse
             if event.type == pygame.MOUSEBUTTONDOWN:                                                        # Se clicar com o mouse
                 pos_mouse = pygame.mouse.get_pos()                                                          # Pega a posição do mause em pixels
