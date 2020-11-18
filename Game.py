@@ -44,7 +44,12 @@ def criarbomba(tam):    # Função responsável por definir os locais das bombas
     return bomb                                         # Retorna a lista de bombas que foi gerada
 
 
-def abrir_casa(pos, list_bomb, tam_casa):   # Função responsável por abrir uma casa
+def abrir_casa(pos, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas):   # Função responsável por abrir uma casa
+    if pos[0] < 0 or pos[1] < 0 or pos[0] > tamanho_tabuleiro-1 or pos[1] > tamanho_tabuleiro-1:    # Confere se a casa está dentro do tabuleiro
+        return
+    if pos in casas_abertas:    # Confere que a casa já foi aberta
+        return
+
     redor = ((pos[0]-1, pos[1]-1),      # Guarda todas as casas ao redor da casa clicada em uma lista
              (pos[0]-1, pos[1]),
              (pos[0]-1, pos[1]+1),
@@ -70,10 +75,14 @@ def abrir_casa(pos, list_bomb, tam_casa):   # Função responsável por abrir um
         return True                             # retorna verdadeiro
     else:
         screen.blit(empty[quant_bomba], posicao_casa)   # Mostra na tela a imagem da bomba
+        casas_abertas.append(pos)            # Adiciona a casa clicada à lista de casas abertas
+        if quant_bomba == 0:
+            for casa in redor:
+                abrir_casa(casa, list_bomb, tam_casa, tamanho_tabuleiro, casas_abertas)
     return False                                # retorna falso
 
 
-def ganhar(casas_abertas, tamanho_tabuleiro, casas_marcadas, casas_bombas):     # verifica se o jogador ganhou o jogo
+def ganhar(tamanho_tabuleiro, casas_marcadas, casas_bombas, casas_abertas):     # verifica se o jogador ganhou o jogo
     bombas_marcadas_certas = 0                                                          # variavel que será marcado a quantidade de bombas definidas corretamente
     if len(casas_abertas) == (tamanho_tabuleiro*tamanho_tabuleiro)-len(casas_bombas):   # se a quantidade de casas abertas for igual ao total de casas menos a quantidade de casas que tem bomba
         for casa in casas_marcadas:                                                     # para cada casa nas casas marcadas pelo jogador
@@ -124,7 +133,7 @@ def game(tam):          # Função principal do jogo
             pos_casa = (pos_casa[0] + tam_casa, pos_casa[1])    # Atualiza a posição para o local da proxima casa (na linha)
         # desce uma coluna
         pos_casa = (25, pos_casa[1] + tam_casa)     # Atualiza a posição para o local da proxima coluna
-    pygame.display.update() # Atualiza a tela
+    pygame.display.update()     # Atualiza a tela
 
     # Variáveis
     casas_bombas = criarbomba(tam)  # Criar Bombas
@@ -150,8 +159,7 @@ def game(tam):          # Função principal do jogo
                     if pygame.mouse.get_pressed()[0] == 1:      # Confere se o botão esquerdo foi clicado
                         if casa_mouse[0] < tam and casa_mouse[1] < tam:     # Confere se a posição que houve o clique do mouse foi dentro do tabuleiro
                             if casa_mouse not in bombas_definidas:          # Se a casa clicada não estiver sido marcada como bomba pelo jogador
-                                find_bomb = abrir_casa(casa_mouse, casas_bombas, tam_casa)  # Armazena o resultado da função (Se o usuario clicar em bomba irá retorna verdadeiro)
-                                casas_abertas.append(casa_mouse)            # Adiciona a casa clicada à lista de casas abertas
+                                find_bomb = abrir_casa(casa_mouse, casas_bombas, tam_casa, tam, casas_abertas)  # Armazena o resultado da função (Se o usuario clicar em bomba irá retorna verdadeiro)
 
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495: # Confere se o clique foi feito na região do botão de voltar
                             screen.blit(voltar_icone_clicked, (50, 453))    # Mostra a imagem um pouco mais escura do botão de clicar
@@ -178,7 +186,10 @@ def game(tam):          # Função principal do jogo
         if find_bomb:   # Se o usuario tiver clicado em uma bomba
             break       # Finaliza o loop
 
-        if ganhar(casas_abertas, tam, bombas_definidas, casas_bombas):  # Verifica se o usuario ganhou o jogo
+        if ganhar(tamanho_tabuleiro=tam,
+                  casas_marcadas=bombas_definidas,
+                  casas_bombas=bombas_definidas,
+                  casas_abertas=casas_abertas):  # Verifica se o usuario ganhou o jogo
             #   Define o nível que a pessoa está jogando, para mostrar na tela
             nivel = 'pessoa'
             if tam == 8: nivel = 'Soldado'
