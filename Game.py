@@ -22,7 +22,7 @@ img_bandeira = pygame.image.load("Imagens/fundo/bandeira-1.png")
 tab_bandeira = pygame.image.load("Imagens/tabuleiro/bandeira.png")
 voltar_icone = pygame.image.load("Imagens/fundo/icone-voltar.png ")
 voltar_icone_clicked = pygame.image.load("Imagens/fundo/icone-voltar-clicked.png")
-"""Explicar essa parte"""
+
 empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
@@ -168,8 +168,8 @@ def game(tam):          # Função principal do jogo
                         if 90 > pos_mouse[0] > 50 and 453 < pos_mouse[1] < 495: # Confere se o clique foi feito na região do botão de voltar
                             screen.blit(voltar_icone_clicked, (50, 453))    # Mostra a imagem um pouco mais escura do botão de clicar
                             pygame.display.update()     # Atualiza a tela
-                            sair = False                # Define o final do loop
-                            sleep(0.2)                  # Espera 0.2 segundos
+                            sleep(0.2)  # Espera 0.2 segundos
+                            return True              # Define o final do loop
 
                     # Se o Botão direito for clicado (marcar casa)
                     elif pygame.mouse.get_pressed()[2] == 1:    # Confere se o botão direito foi clicado
