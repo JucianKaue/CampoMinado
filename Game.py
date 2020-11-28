@@ -161,7 +161,7 @@ def game(tam):          # Função principal do jogo
 
                     # Se o botão esquerdo do mause for clicado (abrir casa, ou voltar)
                     if pygame.mouse.get_pressed()[0] == 1:      # Confere se o botão esquerdo foi clicado
-                        if casa_mouse[0] < tam and casa_mouse[1] < tam:     # Confere se a posição que houve o clique do mouse foi dentro do tabuleiro
+                        if (pos_mouse[0] > 25 and pos_mouse[1] > 50) and (pos_mouse[0] < 425 and pos_mouse[1] < 450):     # Confere se a posição que houve o clique do mouse foi dentro do tabuleiro
                             if casa_mouse not in bombas_definidas:          # Se a casa clicada não estiver sido marcada como bomba pelo jogador
                                 find_bomb = abrir_casa(casa_mouse, casas_bombas, tam_casa, tam, casas_abertas)  # Armazena o resultado da função (Se o usuario clicar em bomba irá retorna verdadeiro)
 
@@ -188,7 +188,7 @@ def game(tam):          # Função principal do jogo
                             screen.blit(txt_num_bombas_abertas, (335, 457))     # Mostrar na tela o numero de bombas
 
         if find_bomb:   # Se o usuario tiver clicado em uma bomba
-            break       # Finaliza o loop
+            return True       # Finaliza o loop
 
         if ganhar(tamanho_tabuleiro=tam,
                   casas_marcadas=bombas_definidas,
@@ -209,7 +209,7 @@ def game(tam):          # Função principal do jogo
             screen.blit(txt_win, (40, 30))                              # Mostra o texto
             pygame.display.update()                                     # Atualiza a tela
             sleep(5)                                                    # Espera 5 segundos
-            break                                                       # Finaliza o jogo
+            return True                                                     # Finaliza o jogo
 
         pygame.display.update()     # Atualiza a tela no final de cada loop
 
