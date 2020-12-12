@@ -4,13 +4,6 @@ from time import sleep
 
 # Definir cores
 black = (0, 0, 0)
-gray = (100, 100, 100)
-white = (255, 255, 255)
-green = (0, 255, 0)
-p_blue = (21, 180, 237)
-p_light_blue = (22, 247, 247)
-p_blue_green = (32, 224, 168)
-p_green_azul = (22, 247, 120)
 p_green = (21, 237, 54)
 
 # Imagens

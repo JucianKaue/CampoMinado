@@ -27,9 +27,6 @@ empty = []
 for i in range(0, 9):
     empty.append(pygame.image.load(f"Imagens/tabuleiro/empty{i}.png"))
 
-# Mostrar local que aparecerá o numero de bombas
-screen.blit(img_bandeira, (280, 453))
-
 
 # Funções
 def criarbomba(tam):    # Função responsável por definir os locais das bombas
@@ -103,15 +100,13 @@ def perder():   # Irá mostrar na tela a mensagem de que o jogador perrdeu
 
 def game(tam):          # Função principal do jogo
 
-    sleep(1/60)     # Trava o jogo em 60 atualizações por minuto (60 FPS)
-
     global padrao, bandeira_casa, bomb_img  # Define algumas variáveis que possuem escopo global, ou seja, funcionam em qualquer parte do programa
 
-    pygame.init()   # Inciar pygame
-
-    screen.blit(fundo, (0, 0))      # Apagar a tela anterior
-
-    screen.blit(text_title, (120, 2))       # mostrar texto (titulo da janela)
+    # Inciar pygame
+    try:
+        pygame.init()
+    except:
+        print('Não foi possível iniciar o módulo PYGAME')
 
     # Define tamanho de cada tipo de casa da tabela
     tam_casa = int(400 / tam)      # define o tamanho da casa
@@ -121,8 +116,9 @@ def game(tam):          # Função principal do jogo
     bomb_img = pygame.transform.scale(mine, (tam_casa, tam_casa))
     bandeira_casa = pygame.transform.scale(tab_bandeira, (tam_casa, tam_casa))
 
+    screen.blit(fundo, (0, 0))      # Apagar a tela anterior
+    screen.blit(text_title, (120, 2))       # mostrar texto (titulo da janela)
     screen.blit(img_bandeira, (280, 453))   # Mostrar local de numero de bombas definidas
-
     screen.blit(voltar_icone, (50, 453))    # Mostrar botão de voltar
 
     # Criar tabela
