@@ -173,7 +173,7 @@ def game(tam):          # Função principal do jogo
 
                     # Se o Botão direito for clicado (marcar casa)
                     elif pygame.mouse.get_pressed()[2] == 1:    # Confere se o botão direito foi clicado
-                        if casa_mouse[0] < tam and casa_mouse[1] < tam:     # Confere se o clique ocorreu na tabela
+                        if (pos_mouse[0] > 25 and pos_mouse[1] > 50) and (pos_mouse[0] < 425 and pos_mouse[1] < 450):     # Confere se o clique ocorreu na tabela
                             if casa_mouse in bombas_definidas:              # Se a casa clicada já estiver na lista de bombas definidas
                                 bombas_definidas.pop(bombas_definidas.index(casa_mouse))    # Remover a casa da lista de bombas definidas
                                 screen.blit(padrao, posicao_casa)       # Mostra a imagem padrão
